@@ -1,4 +1,10 @@
 unit cs_deltaE2000;
+{<
+//
+//
+//
+//
+/}
 
 {$mode objfpc}{$H+}
 
@@ -31,11 +37,11 @@ begin
     var_bias:=0;
     if var_a<0 then var_bias:=180
     else begin
-        if 0<var_b then var_bias:=  0;
+        if 0<var_b then var_bias:=000
                    else var_bias:=360;
-    end
+    end;
     //
-    result:= radtodeg( arctanh(var_b/var_a) ) + var_bias;
+    result:= radtodeg( arctan(var_b/var_a) ) + var_bias;
 end;
 
 
@@ -46,8 +52,23 @@ var xC1:tCalculations;
     xCX:tCalculations;
     xGX:tCalculations;
     xNN:tCalculations;
-
+    xH1:tCalculations;
+    xH2:tCalculations;
+    xDL:tCalculations;
+    xDC:tCalculations;
+    xDH:tCalculations;
+    xLX:tCalculations;
+    xCY:tCalculations;
+    xHX:tCalculations;
+    xTX:tCalculations;
+    xPH:tCalculations;
+    xRC:tCalculations;
+    xSL:tCalculations;
+    xSC:tCalculations;
+    xSH:tCalculations;
+    xRT:tCalculations;
 begin
+
     xC1:=sqrt( a1*a1 + b1*b1 );
     xC2:=sqrt( a2*a2 + b2*b2 );
     xCX:=(xC1+xC2)/2;
@@ -84,24 +105,23 @@ begin
         xHX:=xHX/2;
     end;
     //
-    xTX = 1 - 0.17 * cos( dtor( xHX - 30 ) ) + 0.24
-               * cos( deg2rad( 2 * xHX ) ) + 0.32
-               * cos( deg2rad( 3 * xHX + 6 ) ) - 0.20
-               * cos( dtor( 4 * xHX - 63 ) )
-xPH = 30 * exp( - ( ( xHX  - 275 ) / 25 ) * ( ( xHX  - 275 ) / 25 ) )
-xRC = 2 * sqrt( ( xCY ^ 7 ) / ( ( xCY ^ 7 ) + ( 25 ^ 7 ) ) )
-xSL = 1 + ( ( 0.015 * ( ( xLX - 50 ) * ( xLX - 50 ) ) )
-         / sqrt( 20 + ( ( xLX - 50 ) * ( xLX - 50 ) ) ) )
+    xTX:= 1 - 0.17 * cos( degtorad( xHX - 30 ) )
+            + 0.24 * cos( degtorad( 2 * xHX ) )
+            + 0.32 * cos( degtorad( 3 * xHX + 6 ) )
+            - 0.20 * cos( degtorad( 4 * xHX - 63 ) );
+    xPH:= 30 * exp( - ( ( xHX  - 275 ) / 25 ) * ( ( xHX  - 275 ) / 25 ) );
+    xRC:= 2 * sqrt( power(xCY,7) / ( power(xCY,7) + power( 25,7 ) ) );
+    xSL:= 1 + ( ( 0.015 * ( ( xLX - 50 ) * ( xLX - 50 ) ) ) / sqrt( 20 + ( ( xLX - 50 ) * ( xLX - 50 ) ) ) );
+    xSC:= 1 + 0.045 * xCY;
+    xSH:= 1 + 0.015 * xCY * xTX;
+    xRT:= - sin( degtorad( 2 * xPH ) ) * xRC;
+    xDL:= xDL / (whtL * xSL );
+    xDC:= xDC / (whtC * xSC );
+    xDH:= xDH / (whth * xSH );
+    //----------
+    RESULT:= sqrt( sqr(xDL) + sqr(xDC) + sqr(xDH) + xRT * xDC * xDH )
 
-xSC = 1 + 0.045 * xCY
-xSH = 1 + 0.015 * xCY * xTX
-xRT = - sin( deg2rad( 2 * xPH ) ) * xRC
-xDL = xDL / ( WHT-L * xSL )
-xDC = xDC / ( WHT-C * xSC )
-xDH = xDH / ( WHT-H * xSH )
-
-Delta E00 = sqrt( xDL ^ 2 + xDC ^ 2 + xDH ^ 2 + xRT * xDC * xDH )
-
+end;
 
 end.
 
