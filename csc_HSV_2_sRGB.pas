@@ -19,10 +19,13 @@ type tCalculations=t_csIntermediateCalculations;
 
 procedure HSV_2_sRGB(const H,S,V:t_HSV_colorComp; out sR,sG,sB:t_sRGB_colorComp);
 var var_h:tCalculations;
-    var_i:tCalculations;
+    var_i:byte;
     var_1:tCalculations;
     var_2:tCalculations;
     var_3:tCalculations;
+    var_r:tCalculations;
+    var_g:tCalculations;
+    var_b:tCalculations;
 begin
     if S=0 then begin
         sR:=round(V*255);
