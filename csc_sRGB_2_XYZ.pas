@@ -14,6 +14,8 @@ uses
 //X, Y and Z output refer to a D65/2° standard illuminant.
 //  http://www.easyrgb.com/en/math.php
 
+
+
 procedure sRGB_2_XYZ(const sR,sG,sB:t_sRGB_colorComp; out X,Y,Z:t_XYZ_colorComp);
 
 implementation

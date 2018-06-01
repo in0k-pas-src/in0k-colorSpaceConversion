@@ -11,6 +11,7 @@ type
   t_sRGB_colorComp=byte;
   t_XYZ_colorComp =single;
   t_Lab_colorComp =single;
+  t_HSV_colorComp =single;
 
 
 implementation
