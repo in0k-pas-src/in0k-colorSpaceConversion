@@ -7,9 +7,8 @@ interface
 
 uses
   Graphics,
-  math,
-  cs_W3_WCAG_relativeLuminance,
-  cs_types;
+  cs_types,
+  cs_W3_WCAG_relativeLuminance;
 
 
 type tCS_W3WCAG_contrastRatio=t_csIntermediateCalculations;
@@ -21,13 +20,22 @@ implementation
 type tCalc=t_csIntermediateCalculations;
 
 function cs_W3WCAG_contrastRatio(const c1,c2:TColor):tCS_W3WCAG_contrastRatio;
-var rl1:tCalc;
-    rl2:tCalc;
-begin
+var rl1:tCS_W3WCAG_relativeLuminance;
+    rl2:tCS_W3WCAG_relativeLuminance;
+begin   {$ifOpt D+}
+        Assert(c1=ColorToRGB(c1),'`c1` is NOT sRGB color!');
+        Assert(c2=ColorToRGB(c2),'`c2` is NOT sRGB color!');
+        {$endIf}
     rl1:=cs_W3WCAG_relativeLuminance(c1);
     rl2:=cs_W3WCAG_relativeLuminance(c2);
-    //
-    result:=(max(rl1,rl2) + 0.05) / (min(rl1,rl2) + 0.05);
+    // сама формула
+    if rl1<rl2
+    then result:=(rl2+0.05)/(rl1+0.05)
+    else result:=(rl1+0.05)/(rl2+0.05);
+    {$ifOpt D+} // результат ДОЛЖен лежать в диапазоне [1..21]
+    Assert(01<=result,'`result` is WRONG!');
+    Assert(result<=21,'`result` is WRONG!');
+    {$endIf}
 end;
 
 end.

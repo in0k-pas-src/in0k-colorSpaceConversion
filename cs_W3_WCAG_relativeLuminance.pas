@@ -22,7 +22,9 @@ type tCalc=t_csIntermediateCalculations;
 
 function cs_W3WCAG_relativeLuminance(const color:TColor):tCS_W3WCAG_relativeLuminance;
 var r,g,b:tCalc;
-begin
+begin   {$ifOpt D+}
+        Assert(color=ColorToRGB(color),'`color` is NOT sRGB color!');
+        {$endIf}
     r:=Red  (color)/$FF;
     g:=Green(color)/$FF;
     b:=Blue (color)/$FF;
@@ -30,8 +32,12 @@ begin
     if (r<=0.03928) then r:= r/12.92 else r:= power((r+0.055)/1.055,2.4);
     if (g<=0.03928) then g:= g/12.92 else g:= power((g+0.055)/1.055,2.4);
     if (b<=0.03928) then b:= b/12.92 else b:= power((b+0.055)/1.055,2.4);
-    //
+    // ФОРМУЛА
     result:=0.2126*r + 0.7152*g + 0.0722*b;
+    {$ifOpt D+} // результат ДОЛЖен лежать в диапазоне [0..1]
+    Assert(0<=result,'`result` is WRONG!');
+    Assert(result<=1,'`result` is WRONG!');
+    {$endIf}
 end;
 
 end.
